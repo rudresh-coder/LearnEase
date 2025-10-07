@@ -21,7 +21,6 @@
     "permissions": ["storage", "activeTab", "scripting", "alarms", "declarativeNetRequest"],
     "background": {
       "service_worker": "background.js"
-    },
-    "options_page": "options.html"
+    }
   }
   
