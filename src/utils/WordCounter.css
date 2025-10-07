@@ -1,0 +1,106 @@
+.wordcounter-container {
+    width: 340px;
+    margin: 0 auto;
+    padding: 18px;
+    font-family: sans-serif;
+    font-size: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+  
+  .wordcounter-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #222;
+  }
+  
+  .wordcounter-textarea {
+    width: 100%;
+    min-height: 110px;
+    resize: vertical;
+    padding: 8px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
+  
+  .wordcounter-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+    margin-bottom: 14px;
+    color: #444;
+  }
+  
+  .wordcounter-goal {
+    margin-bottom: 16px;
+  }
+  
+  .wordcounter-input {
+    width: 100%;
+    padding: 6px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin: 6px 0 8px 0;
+    box-sizing: border-box;
+  }
+  
+  .wordcounter-progressbar {
+    width: 100%;
+    height: 10px;
+    background: #eee;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 4px;
+  }
+  
+  .wordcounter-progress {
+    height: 100%;
+    background: #4f46e5;
+    transition: width 0.3s;
+  }
+  
+  .wordcounter-progress-text {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+  }
+  
+  .wordcounter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  
+  .wordcounter-btn {
+    flex: 1;
+    padding: 8px 0;
+    font-size: 1em;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .wordcounter-btn-primary {
+    background: #2563eb;
+    color: #fff;
+  }
+  
+  .wordcounter-btn-primary:hover {
+    background: #1e40af;
+  }
+  
+  .wordcounter-btn-secondary {
+    background: #e5e7eb;
+    color: #222;
+  }
+  
+  .wordcounter-btn-secondary:hover {
+    background: #cbd5e1;
+  }
