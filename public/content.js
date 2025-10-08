@@ -27,6 +27,8 @@ function computeStats(text) {
     tip.style.left = `${Math.min(x, window.innerWidth - tip.offsetWidth - 16)}px`;
     tip.style.top = `${Math.min(y, window.innerHeight - tip.offsetHeight - 16)}px`;
   }
+
+  let pinned = false;
   
   document.addEventListener("mouseup", () => {
     removeTooltip();

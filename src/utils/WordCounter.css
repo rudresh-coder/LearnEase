@@ -98,9 +98,11 @@
   
   .wordcounter-btn-secondary {
     background: #e5e7eb;
-    color: #222;
+    color: #2563eb;
+    border: 1px solid #2563eb;
   }
-  
   .wordcounter-btn-secondary:hover {
-    background: #cbd5e1;
+    background: #dbeafe;
+    color: #1e40af;
+    border-color: #1e40af;
   }
