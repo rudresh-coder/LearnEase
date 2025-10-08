@@ -61,7 +61,7 @@
   
   .wordcounter-progress {
     height: 100%;
-    background: #4f46e5;
+    background: rgba(14, 120, 84, 0.85);
     transition: width 0.3s;
   }
   
@@ -77,32 +77,94 @@
     margin-top: 8px;
   }
   
-  .wordcounter-btn {
+  .wordcounter-btn,
+  .wordcounter-btn-main {
     flex: 1;
-    padding: 8px 0;
-    font-size: 1em;
-    border-radius: 6px;
+    min-width: 0;
+    padding: 1em 0;
+    font-size: 17px;
+    font-weight: 500;
+    border-radius: 0.6em;
     border: none;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
     transition: background 0.2s;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .wordcounter-btn-primary {
-    background: #2563eb;
+    background: rgba(16, 185, 129, 0.85); 
     color: #fff;
+    border: 1.5px solid #11916c; 
   }
   
   .wordcounter-btn-primary:hover {
-    background: #1e40af;
+    background: #11916c; 
+    border-color: #11916c;
+    color: #fff;
   }
   
   .wordcounter-btn-secondary {
-    background: #e5e7eb;
-    color: #2563eb;
-    border: 1px solid #2563eb;
+    background: rgba(16, 185, 129, 0.25);
+    color: #11916c;
+    border: 1.5px solid #11916c; 
   }
+  
   .wordcounter-btn-secondary:hover {
-    background: #dbeafe;
-    color: #1e40af;
-    border-color: #1e40af;
+    background: #11916c; 
+    color: #fff;
+    border-color: #11916c;
+  }
+
+  .wordcounter-btn-main {
+    background: #1f2937;
+    color: white;
+  }
+  
+  .wordcounter-btn-main .gradient {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border-radius: 0.6em;
+    margin-top: -0.25em;
+    background-image: linear-gradient(
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.3)
+    );
+  }
+  
+  .wordcounter-btn-main .label {
+    position: relative;
+    top: -1px;
+    z-index: 1;
+  }
+  
+  .wordcounter-btn-main .transition {
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition-duration: 500ms;
+    background-color: rgba(16, 185, 129, 0.6);
+    border-radius: 9999px;
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+  }
+  
+  .wordcounter-btn-main:hover .transition {
+    width: 14em;
+    height: 14em;
+  }
+  
+  .wordcounter-btn-main:active {
+    transform: scale(0.97);
   }

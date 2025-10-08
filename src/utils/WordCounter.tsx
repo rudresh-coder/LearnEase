@@ -142,8 +142,10 @@ export default function WordCounter(): JSX.Element {
       </div>
 
       <div className="wordcounter-buttons">
-        <button onClick={handleSaveToJournal} className="wordcounter-btn wordcounter-btn-primary">
-          Save Journal
+        <button onClick={handleSaveToJournal} className="wordcounter-btn wordcounter-btn-main">
+          <span className="gradient"></span>
+          <span className="label">Save Journal</span>
+          <span className="transition"></span>
         </button>
         <button onClick={handleCopy} className="wordcounter-btn wordcounter-btn-secondary">
           Copy Text
