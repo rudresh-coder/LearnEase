@@ -92,6 +92,7 @@ function computeStats(text) {
   });
 
   let readingActive = false;
+  let readingPaused = false;
   let readingSeconds = 0;
   let readingTimer = null;
 
@@ -118,20 +119,32 @@ function computeStats(text) {
     if (msg.type === "START_READING") {
       if (!readingActive) {
         readingActive = true;
+        readingPaused = false;
         readingTimer = setInterval(() => {
-          readingSeconds++;
-          saveReadingSession();
+          if (!readingPaused) {
+            readingSeconds++;
+            saveReadingSession();
+          }
         }, 1000);
       }
       sendResponse({ started: true });
     }
     if (msg.type === "STOP_READING") {
       readingActive = false;
+      readingPaused = false;
       clearInterval(readingTimer);
       readingTimer = null;
       saveReadingSession();
       readingSeconds = 0;
       sendResponse({ stopped: true });
+    }
+    if (msg.type === "PAUSE_READING") {
+      readingPaused = true;
+      sendResponse({ paused: true });
+    }
+    if (msg.type === "RESUME_READING") {
+      readingPaused = false;
+      sendResponse({ resumed: true });
     }
   });
 
