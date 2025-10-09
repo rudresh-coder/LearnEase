@@ -3,7 +3,7 @@ function computeStats(text) {
     const words = wordsArr.length;
     const uniqueWords = new Set(wordsArr.map(w => w.toLowerCase())).size;
     const sentences = text.split(/[.!?]+(?=\s|$)/g).filter(s => s.trim().length > 0).length;
-    const paragraphs = text.split(/\n\s*\n/g).filter(p => p.trim().length > 0).length || (text.trim() ? 1 : 0);
+    const paragraphs = text.split(/\n\s*\n/g).filter(p => p.trim().length > 0) || (text.trim() ? 1 : 0);
     const chars = text.length;
     const charsNoSpaces = text.replace(/\s+/g, "").length;
     const totalWordChars = wordsArr.reduce((acc, w) => acc + w.length, 0);
@@ -89,4 +89,59 @@ function computeStats(text) {
   document.addEventListener("mousedown", (e) => {
     const tip = document.getElementById("learnease-tooltip");
     if (tip && !tip.contains(e.target) && !pinned) removeTooltip();
+  });
+
+  let readingActive = false;
+  let readingSeconds = 0;
+  let readingTimer = null;
+
+  function saveReadingSession() {
+    chrome.storage.sync.get("readingSessions", (data) => {
+      const url = window.location.href;
+      const session = {
+        url,
+        timeSpent: readingSeconds,
+        lastAccessed: new Date().toLocaleDateString(),
+      };
+      let sessions = data.readingSessions || [];
+      const idx = sessions.findIndex(s => s.url === url);
+      if (idx >= 0) {
+        sessions[idx] = session;
+      } else {
+        sessions.push(session);
+      }
+      chrome.storage.sync.set({ readingSessions: sessions });
+    });
+  }
+
+  chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    if (msg.type === "START_READING") {
+      if (!readingActive) {
+        readingActive = true;
+        readingTimer = setInterval(() => {
+          readingSeconds++;
+          saveReadingSession();
+        }, 1000);
+      }
+      sendResponse({ started: true });
+    }
+    if (msg.type === "STOP_READING") {
+      readingActive = false;
+      clearInterval(readingTimer);
+      readingTimer = null;
+      saveReadingSession();
+      readingSeconds = 0;
+      sendResponse({ stopped: true });
+    }
+  });
+
+  // Stop timer if tab is closed or navigated away
+  window.addEventListener("beforeunload", () => {
+    if (readingActive) {
+      clearInterval(readingTimer);
+      saveReadingSession();
+      readingActive = false;
+      readingTimer = null;
+      readingSeconds = 0;
+    }
   });
