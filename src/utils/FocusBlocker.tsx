@@ -1,33 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const BLOCKED_SITES = [
     "facebook.com",
-    "twitter.com",
+    "x.com",
     "instagram.com",
     "reddit.com",
     "youtube.com",
     "tiktok.com",
     "netflix.com",
     "hulu.com",
-    "pinterest.com",
+    "in.pinterest.com",
     "tumblr.com"
-]
+];
 
 export default function FocusBlocker() {
     const [active, setActive] = useState(false);
 
-    const handleStart = () => {
-        chrome.storage.sync.set({ focusBlockerActive: true });
-        setActive(true);
-    };
+    // Sync UI with Chrome storage on mount and when popup is opened
+    useEffect(() => {
+        chrome.storage.sync.get("focusBlockerActive", (data) => {
+            setActive(!!data.focusBlockerActive);
+        });
+    }, []);
 
-    const handleStop = () => {
-        chrome.storage.sync.set({ focusBlockerActive: false });
-        setActive(false);
+    const handleToggle = () => {
+        chrome.storage.sync.set({ focusBlockerActive: !active }, () => {
+            setActive(!active);
+        });
     };
 
     return (
-        <div style={{ width: 340,
+        <div style={{
+            width: 340,
             margin: "0 auto",
             padding: 18,
             fontFamily: "sans-serif",
@@ -35,11 +39,12 @@ export default function FocusBlocker() {
             borderRadius: 10,
             boxShadow: "0 2px 12px rgba(16, 185, 129, 0.07)",
             textAlign: "center"
-         }}>
+        }}>
             <h2 style={{ color: "#10b981", marginBottom: 18 }}>🚫 Focus Blocker</h2>
-            <div style={{ marginBottom: 16 }}>
-                {active ? "Blocking distracting sites during study time."
-                : "Click Start to block distracting sites while you study."}
+            <div style={{ marginBottom: 16, fontWeight: 500, color: active ? "#11916c" : "#b91c1c" }}>
+                {active
+                    ? "Focus Blocker is ON. Distracting sites are blocked."
+                    : "Focus Blocker is OFF. Distracting sites are accessible."}
             </div>
             <ul style={{ textAlign: "left", marginBottom: 18 }}>
                 {BLOCKED_SITES.map(site => (
@@ -47,12 +52,19 @@ export default function FocusBlocker() {
                 ))}
             </ul>
             <button
-            className="word-counter-btn wordcounter-btn-main"
-            onClick={active ? handleStop : handleStart}>
+                className="wordcounter-btn wordcounter-btn-main"
+                style={{
+                    background: active ? "#11916c" : "#b91c1c",
+                    color: "#fff"
+                }}
+                onClick={handleToggle}
+            >
                 <span className="gradient"></span>
-                <span className="label">{active ? "⏹ Stop Blocking" : "▶ Start Blocking"}</span>
+                <span className="label">
+                    {active ? "Turn OFF Focus Blocker" : "Turn ON Focus Blocker"}
+                </span>
                 <span className="transition"></span>
-            </button> 
-         </div>
-    )
+            </button>
+        </div>
+    );
 }

@@ -180,3 +180,32 @@ function computeStats(text) {
       }
     }
   });
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "sync" && changes.focusBlockerActive) {
+    const isActive = changes.focusBlockerActive.newValue;
+    const BLOCKED_SITES = [
+      "youtube.com",
+      "facebook.com",
+      "instagram.com",
+      "x.com",
+      "reddit.com",
+      "tiktok.com",
+      "netflix.com",
+      "hulu.com",
+      "in.pinterest.com",
+      "tumblr.com"
+    ];
+    if (isActive && BLOCKED_SITES.some(site => window.location.hostname.includes(site))) {
+      document.body.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
+          <h1 style="color:#10b981;font-size:2em;">🚫 Focus Blocker</h1>
+          <p style="font-size:1.2em;">This site is blocked during study time.</p>
+        </div>
+      `;
+    } else if (!isActive) {
+      // Optionally, reload the page to restore content when blocker is turned off
+      window.location.reload();
+    }
+  }
+});
