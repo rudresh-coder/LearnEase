@@ -7,7 +7,7 @@ import "./AppMenu.css";
 const FEATURES = [
   { key: "word", label: "Word Counter" },
   { key: "reading", label: "Reading Timer" },
-  { key: "focus", label: "Focus Blocker" },
+  { key: "focus", label: "Website Blocker" },
   { key: "pomodoro", label: "Pomodoro Timer" },
   { key: "journal", label: "Journal" },
   { key: "stats", label: "Study Stats" },

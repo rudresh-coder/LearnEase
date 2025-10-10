@@ -159,33 +159,10 @@ function computeStats(text) {
     }
   });
 //Focus Blocker
-  const BLOCKED_SITES = [
-    "youtube.com",
-    "facebook.com",
-    "instagram.com",
-    "twitter.com",
-    "reddit.com",
-    "tiktok.com"
-  ];
-  
-  chrome.storage.sync.get("focusBlockerActive", (data) => {
-    if (data.focusBlockerActive) {
-      if (BLOCKED_SITES.some(site => window.location.hostname.includes(site))) {
-        document.body.innerHTML = `
-          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
-            <h1 style="color:#10b981;font-size:2em;">🚫 Focus Blocker</h1>
-            <p style="font-size:1.2em;">This site is blocked during study time.</p>
-          </div>
-        `;
-      }
-    }
-  });
-
-chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "sync" && changes.focusBlockerActive) {
-    const isActive = changes.focusBlockerActive.newValue;
+function getBlockedSites(callback) {
+  chrome.storage.sync.get(["focusBlockerCustomSites"], (data) => {
+    const customSites = data.focusBlockerCustomSites || [];
     const BLOCKED_SITES = [
-      "youtube.com",
       "facebook.com",
       "instagram.com",
       "x.com",
@@ -194,18 +171,42 @@ chrome.storage.onChanged.addListener((changes, area) => {
       "netflix.com",
       "hulu.com",
       "in.pinterest.com",
-      "tumblr.com"
+      "tumblr.com",
+      ...customSites
     ];
-    if (isActive && BLOCKED_SITES.some(site => window.location.hostname.includes(site))) {
-      document.body.innerHTML = `
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
-          <h1 style="color:#10b981;font-size:2em;">🚫 Focus Blocker</h1>
-          <p style="font-size:1.2em;">This site is blocked during study time.</p>
-        </div>
-      `;
-    } else if (!isActive) {
-      // Optionally, reload the page to restore content when blocker is turned off
-      window.location.reload();
-    }
+    callback(BLOCKED_SITES);
+  });
+}
+
+chrome.storage.sync.get("focusBlockerActive", (data) => {
+  if (data.focusBlockerActive) {
+    getBlockedSites((BLOCKED_SITES) => {
+      if (BLOCKED_SITES.some(site => window.location.hostname.includes(site))) {
+        document.body.innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
+            <h1 style="color:#10b981;font-size:2em;">🚫 Focus Blocker</h1>
+            <p style="font-size:1.2em;">This site is blocked during study time.</p>
+          </div>
+        `;
+      }
+    });
+  }
+});
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "sync" && changes.focusBlockerActive) {
+    const isActive = changes.focusBlockerActive.newValue;
+    getBlockedSites((BLOCKED_SITES) => {
+      if (isActive && BLOCKED_SITES.some(site => window.location.hostname.includes(site))) {
+        document.body.innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
+            <h1 style="color:#10b981;font-size:2em;">🚫 Focus Blocker</h1>
+            <p style="font-size:1.2em;">This site is blocked during study time.</p>
+          </div>
+        `;
+      } else if (!isActive) {
+        window.location.reload();
+      }
+    });
   }
 });
