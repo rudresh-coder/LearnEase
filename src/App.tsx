@@ -1,7 +1,8 @@
 import { useState } from "react";
 import WordCounter from "./utils/WordCounter";
 import ReadingTimer from "./utils/ReadingTimer";
-import FocusBlocker from "./utils/FocusBlocker"
+import FocusBlocker from "./utils/FocusBlocker";
+import StudyTimer from "./utils/StudyTimer";
 import "./AppMenu.css";
 
 const FEATURES = [
@@ -39,7 +40,7 @@ export default function App() {
       {page === "word" && <WordCounter />}
       {page === "reading" && <ReadingTimer />}
       {page === "focus" && <FocusBlocker />}
-      {/* {page === "pomodoro" && <StudyTimer />} */}
+      {page === "pomodoro" && <StudyTimer />}
       {/* {page === "journal" && <Journal />} */}
       {/* {page === "stats" && <StudyStats />} */}
       {page && (

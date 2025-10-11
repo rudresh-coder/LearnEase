@@ -18,7 +18,7 @@
       "48": "icons/LearnEaseicon48.png",
       "128": "icons/LearnEaseLogo128.png"
     },
-    "permissions": ["storage", "activeTab", "scripting", "alarms", "declarativeNetRequest"],
+    "permissions": ["storage", "activeTab", "scripting", "alarms", "declarativeNetRequest", "notifications"],
     "background": {
       "service_worker": "background.js"
     },
