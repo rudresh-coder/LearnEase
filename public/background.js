@@ -33,6 +33,9 @@ let pomodoro = {
   running: false,
   workMinutes: 25,
   breakMinutes: 5,
+  longBreakMinutes: 15,
+  cyclesBeforeLongBreak: 4,
+  cycleCount: 0,
   timerId: null,
 };
 
@@ -43,6 +46,9 @@ function savePomodoroState() {
     pomodoroRunning: pomodoro.running,
     pomodoroWorkMinutes: pomodoro.workMinutes,
     pomodoroBreakMinutes: pomodoro.breakMinutes,
+    pomodoroLongBreakMinutes: pomodoro.longBreakMinutes,
+    pomodoroCyclesBeforeLongBreak: pomodoro.cyclesBeforeLongBreak,
+    pomodoroCycleCount: pomodoro.cycleCount,
   });
 }
 
@@ -64,26 +70,51 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (pomodoro.secondsLeft === 60) {
           if (pomodoro.mode === "work") {
             showNotification("Pomodoro", "1 minute left in your focus session!");
-          } else {
+          } else if (pomodoro.mode === "break") {
             showNotification("Pomodoro", "1 minute left in your break!");
+          } else if (pomodoro.mode === "longBreak") {
+            showNotification("Pomodoro", "1 minute left in your long break!");
           }
         }
         // Notify when session ends
         if (pomodoro.secondsLeft === 1) {
           if (pomodoro.mode === "work") {
             showNotification("Pomodoro", "Focus session is over! Break time starts now.");
-          } else {
+          } else if (pomodoro.mode === "break") {
             showNotification("Pomodoro", "Break is over! Time to get back to work.");
+          } else if (pomodoro.mode === "longBreak") {
+            showNotification("Pomodoro", "Long break is over! Time to get back to work.");
           }
         }
 
         if (pomodoro.secondsLeft <= 1) {
+          clearInterval(pomodoro.timerId);
+          pomodoro.running = false;
+          savePomodoroState();
+          setTimeout(() => {
+            pomodoro.running = true;
+            pomodoro.timerId = setInterval(() => {
+              // Timer logic here
+            }, 1000);
+            savePomodoroState();
+          }, 5000); // 5 seconds delay
+
           if (pomodoro.mode === "work") {
-            pomodoro.mode = "break";
-            pomodoro.secondsLeft = pomodoro.breakMinutes * 60;
-          } else {
+            pomodoro.cycleCount++;
+            if (pomodoro.cycleCount % pomodoro.cyclesBeforeLongBreak === 0) {
+              pomodoro.mode = "longBreak";
+              pomodoro.secondsLeft = pomodoro.longBreakMinutes * 60;
+            } else {
+              pomodoro.mode = "break";
+              pomodoro.secondsLeft = pomodoro.breakMinutes * 60;
+            }
+          } else if (pomodoro.mode === "break") {
             pomodoro.mode = "work";
             pomodoro.secondsLeft = pomodoro.workMinutes * 60;
+          } else if (pomodoro.mode === "longBreak") {
+            pomodoro.mode = "work";
+            pomodoro.secondsLeft = pomodoro.workMinutes * 60;
+            pomodoro.cycleCount = 0;
           }
         } else {
           pomodoro.secondsLeft--;
@@ -107,6 +138,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     pomodoro.timerId = null;
     pomodoro.mode = "work";
     pomodoro.secondsLeft = pomodoro.workMinutes * 60;
+    pomodoro.cycleCount = 0;
     savePomodoroState();
     sendResponse({ reset: true });
   }
@@ -115,9 +147,19 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     pomodoro.breakMinutes = msg.breakMinutes;
     if (pomodoro.mode === "work") {
       pomodoro.secondsLeft = pomodoro.workMinutes * 60;
-    } else {
+    } else if (pomodoro.mode === "break") {
       pomodoro.secondsLeft = pomodoro.breakMinutes * 60;
+    } else if (pomodoro.mode === "longBreak") {
+      pomodoro.secondsLeft = pomodoro.longBreakMinutes * 60;
     }
+    savePomodoroState();
+    sendResponse({ updated: true });
+  }
+  if (msg.type === "SET_POMODORO_SETTINGS") {
+    pomodoro.workMinutes = msg.workMinutes;
+    pomodoro.breakMinutes = msg.breakMinutes;
+    pomodoro.longBreakMinutes = msg.longBreakMinutes;
+    pomodoro.cyclesBeforeLongBreak = msg.cyclesBeforeLongBreak;
     savePomodoroState();
     sendResponse({ updated: true });
   }
@@ -128,6 +170,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       running: pomodoro.running,
       workMinutes: pomodoro.workMinutes,
       breakMinutes: pomodoro.breakMinutes,
+      longBreakMinutes: pomodoro.longBreakMinutes,
+      cyclesBeforeLongBreak: pomodoro.cyclesBeforeLongBreak,
+      cycleCount: pomodoro.cycleCount,
     });
   }
 });
