@@ -19,8 +19,7 @@ export default function WordCounter(): JSX.Element {
   const words: number = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
   const characters: number = text.length;
   const sentences: number = text.split(/[.!?]+/).filter(s => s.trim() !== "").length;
-  const paragraphs: number = text.split(/\n+/).filter(p => p.trim() !== "").length;
-
+  const paragraphs: number = text.split(/\r?\n\s*\r?\n/).filter(p => p.trim() !== "").length;  
   const readingTime: number = Math.ceil(words / 200); // avg 200 wpm
   const progress: number = Math.min((words / goal) * 100, 100);
 

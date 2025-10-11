@@ -10,7 +10,6 @@ const FEATURES = [
   { key: "reading", label: "Reading Timer" },
   { key: "focus", label: "Website Blocker" },
   { key: "pomodoro", label: "Pomodoro Timer" },
-  { key: "journal", label: "Journal" },
   { key: "stats", label: "Study Stats" },
 ];
 
@@ -41,7 +40,6 @@ export default function App() {
       {page === "reading" && <ReadingTimer />}
       {page === "focus" && <FocusBlocker />}
       {page === "pomodoro" && <StudyTimer />}
-      {/* {page === "journal" && <Journal />} */}
       {/* {page === "stats" && <StudyStats />} */}
       {page && (
         <button className="app-menu-btn app-menu-back" onClick={() => setPage(null)}>

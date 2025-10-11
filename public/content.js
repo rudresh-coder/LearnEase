@@ -3,7 +3,7 @@ function computeStats(text) {
     const words = wordsArr.length;
     const uniqueWords = new Set(wordsArr.map(w => w.toLowerCase())).size;
     const sentences = text.split(/[.!?]+(?=\s|$)/g).filter(s => s.trim().length > 0).length;
-    const paragraphs = text.split(/\n\s*\n/g).filter(p => p.trim().length > 0) || (text.trim() ? 1 : 0);
+    const paragraphs = text.split(/\r?\n\s*\r?\n/).filter(p => p.trim() !== "").length;
     const chars = text.length;
     const charsNoSpaces = text.replace(/\s+/g, "").length;
     const totalWordChars = wordsArr.reduce((acc, w) => acc + w.length, 0);
