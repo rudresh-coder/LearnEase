@@ -28,26 +28,20 @@ export default function WordCounter(): JSX.Element {
 
   // Load saved goal
   useEffect(() => {
-    if (chrome?.storage?.sync) {
-      chrome.storage.local.get("wordGoal", (data: { wordGoal?: number }) => {
-        if (data.wordGoal) setGoal(data.wordGoal);
-      });
-    }
+    chrome.storage.local.get("wordGoal", (data: { wordGoal?: number }) => {
+      if (data.wordGoal) setGoal(data.wordGoal);
+    });
   }, []);
 
   // Save goal when updated
   useEffect(() => {
-    if (chrome?.storage?.sync) {
-      chrome.storage.local.set({ wordGoal: goal });
-    }
+    chrome.storage.local.set({ wordGoal: goal });
   }, [goal]);
 
   useEffect(() => {
-    if (chrome?.storage?.sync) {
-      chrome.storage.local.get("journal", (data: { journal?: JournalEntry[] }) => {
-        setJournal(data.journal || []);
-      });
-    }
+    chrome.storage.local.get("journal", (data: { journal?: JournalEntry[] }) => {
+      setJournal(data.journal || []);
+    });
   }, []);
 
   const handleSaveToJournal = (): void => {
@@ -88,27 +82,23 @@ export default function WordCounter(): JSX.Element {
   const handleEditSave = (idx: number) => {
     const updated = [...journal];
     updated[idx] = { ...updated[idx], text: editText };
-    if (chrome?.storage?.sync) {
-      chrome.storage.local.set({ journal: updated }, () => {
-        if (chrome.runtime.lastError && chrome.runtime.lastError.message?.includes("quota")) {
-          alert("Storage is full! Please delete some journal entries.");
-        } else {
-          setJournal(updated);
-          setEditingIdx(null);
-          setEditText("");
-        }
-      });
-    }
+    chrome.storage.local.set({ journal: updated }, () => {
+      if (chrome.runtime.lastError && chrome.runtime.lastError.message?.includes("quota")) {
+        alert("Storage is full! Please delete some journal entries.");
+      } else {
+        setJournal(updated);
+        setEditingIdx(null);
+        setEditText("");
+      }
+    });
   };
 
   const handleDelete = (idx: number) => {
     if (!window.confirm("Delete this journal entry?")) return;
     const updated = journal.filter((_, i) => i !== idx);
-    if (chrome?.storage?.sync) {
-      chrome.storage.local.set({ journal: updated }, () => {
-        setJournal(updated);
-      });
-    }
+    chrome.storage.local.set({ journal: updated }, () => {
+      setJournal(updated);
+    });
   };
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
