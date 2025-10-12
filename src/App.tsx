@@ -3,6 +3,7 @@ import WordCounter from "./utils/WordCounter";
 import ReadingTimer from "./utils/ReadingTimer";
 import FocusBlocker from "./utils/FocusBlocker";
 import StudyTimer from "./utils/StudyTimer";
+import StudyStats from "./utils/StudyStats";
 import "./AppMenu.css";
 
 const FEATURES = [
@@ -40,7 +41,7 @@ export default function App() {
       {page === "reading" && <ReadingTimer />}
       {page === "focus" && <FocusBlocker />}
       {page === "pomodoro" && <StudyTimer />}
-      {/* {page === "stats" && <StudyStats />} */}
+      {page === "stats" && <StudyStats />}
       {page && (
         <button className="app-menu-btn app-menu-back" onClick={() => setPage(null)}>
         <span className="gradient"></span>

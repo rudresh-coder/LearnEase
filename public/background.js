@@ -61,6 +61,125 @@ function showNotification(title, message) {
   });
 }
 
+function updateStudyStats(minutes, wordsWritten = 0) {
+  chrome.storage.local.get(["weeklyStats", "studyStreak", "lastStudyDate"], (data) => {
+    const todayIdx = new Date().getDay(); // 0=Sun, 1=Mon, ...
+    const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const day = DAYS[todayIdx];
+    let stats = data.weeklyStats || DAYS.map(d => ({ day: d, hours: 0, words: 0 }));
+    let streak = data.studyStreak || 0;
+    let lastDate = data.lastStudyDate || "";
+
+    // Update today's stats
+    const idx = stats.findIndex(s => s.day === day);
+    if (idx >= 0) {
+      stats[idx].hours += minutes / 60;
+      stats[idx].words += wordsWritten;
+    }
+
+    // Update streak
+    const todayStr = new Date().toLocaleDateString();
+    if (lastDate && lastDate !== todayStr) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      if (lastDate === yesterday.toLocaleDateString()) {
+        streak += 1;
+      } else {
+        streak = 1;
+      }
+    } else if (!lastDate) {
+      streak = 1;
+    }
+
+    chrome.storage.local.set({
+      weeklyStats: stats,
+      studyStreak: streak,
+      lastStudyDate: todayStr
+    });
+
+    updateBadges(stats, streak);
+    rolloverWeeklyStatsIfNeeded(stats);
+  });
+}
+
+function updateBadges(stats, streak) {
+  chrome.storage.local.get(["studyBadges"], (data) => {
+    let badges = data.studyBadges || [];
+    const totalHours = stats.reduce((sum, s) => sum + s.hours, 0);
+    const totalWords = stats.reduce((sum, s) => sum + s.words, 0);
+
+    
+    if (!badges.includes("🏅 First Focus Session Completed") && totalHours > 0) {
+      badges.push("🏅 First Focus Session Completed");
+    }
+    if (!badges.includes("✍️ 1000 Words Written") && totalWords >= 1000) {
+      badges.push("✍️ 1000 Words Written");
+    }
+    if (!badges.includes("⏳ 10-Hour Milestone") && totalHours >= 10) {
+      badges.push("⏳ 10-Hour Milestone");
+    }
+    if (!badges.includes("🔥 7-Day Streak") && streak >= 7) {
+      badges.push("🔥 7-Day Streak");
+    }
+
+   
+    if (!badges.includes("💯 100 Words Written in a Day") && stats.some(s => s.words >= 100)) {
+      badges.push("💯 100 Words Written in a Day");
+    }
+    if (!badges.includes("🕒 2-Hour Day") && stats.some(s => s.hours >= 2)) {
+      badges.push("🕒 2-Hour Day");
+    }
+    if (!badges.includes("🏆 30-Day Streak") && streak >= 30) {
+      badges.push("🏆 30-Day Streak");
+    }
+    if (!badges.includes("✍️ 5000 Words Written") && totalWords >= 5000) {
+      badges.push("✍️ 5000 Words Written");
+    }
+    if (!badges.includes("⏳ 50-Hour Milestone") && totalHours >= 50) {
+      badges.push("⏳ 50-Hour Milestone");
+    }
+    if (!badges.includes("🌟 Studied Every Day This Week") && stats.every(s => s.hours > 0)) {
+      badges.push("🌟 Studied Every Day This Week");
+    }
+
+    chrome.storage.local.set({ studyBadges: badges });
+  });
+}
+
+function rolloverWeeklyStatsIfNeeded(stats) {
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon, ...
+  // Roll over on Monday (dayOfWeek === 1)
+  chrome.storage.local.get(["lastRolloverWeek"], (data) => {
+    const currentWeek = now.getFullYear() + "-" + getWeekNumber(now);
+    if (data.lastRolloverWeek !== currentWeek && dayOfWeek === 1) {
+      // Save last week's stats
+      chrome.storage.local.set({
+        lastWeekStats: stats,
+        lastRolloverWeek: currentWeek,
+        weeklyStats: [
+          { day: "Sun", hours: 0, words: 0 },
+          { day: "Mon", hours: 0, words: 0 },
+          { day: "Tue", hours: 0, words: 0 },
+          { day: "Wed", hours: 0, words: 0 },
+          { day: "Thu", hours: 0, words: 0 },
+          { day: "Fri", hours: 0, words: 0 },
+          { day: "Sat", hours: 0, words: 0 },
+        ]
+      });
+    }
+  });
+}
+
+// Helper to get week number
+function getWeekNumber(d) {
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === "START_POMODORO") {
     if (!pomodoro.running) {
@@ -174,5 +293,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       cyclesBeforeLongBreak: pomodoro.cyclesBeforeLongBreak,
       cycleCount: pomodoro.cycleCount,
     });
+  }
+  if (msg.type === "UPDATE_STUDY_STATS") {
+    
+    updateStudyStats(0, msg.wordsWritten || 0);
+    sendResponse({ updated: true });
   }
 });

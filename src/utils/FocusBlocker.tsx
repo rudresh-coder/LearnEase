@@ -19,7 +19,7 @@ export default function FocusBlocker() {
 
     // Load state and custom sites on mount
     useEffect(() => {
-        chrome.storage.sync.get(["focusBlockerActive", "focusBlockerCustomSites"], (data) => {
+        chrome.storage.local.get(["focusBlockerActive", "focusBlockerCustomSites"], (data) => {
             setActive(!!data.focusBlockerActive);
             setCustomSites(data.focusBlockerCustomSites || []);
         });
@@ -30,7 +30,7 @@ export default function FocusBlocker() {
         const site = newSite.trim().replace(/^https?:\/\//, "").replace(/\/.*$/, "");
         if (!site || customSites.includes(site) || DEFAULT_BLOCKED_SITES.includes(site)) return;
         const updated = [...customSites, site];
-        chrome.storage.sync.set({ focusBlockerCustomSites: updated }, () => {
+        chrome.storage.local.set({ focusBlockerCustomSites: updated }, () => {
             setCustomSites(updated);
             setNewSite("");
         });
@@ -39,13 +39,13 @@ export default function FocusBlocker() {
     // Remove a custom site
     const handleRemoveSite = (site: string) => {
         const updated = customSites.filter(s => s !== site);
-        chrome.storage.sync.set({ focusBlockerCustomSites: updated }, () => {
+        chrome.storage.local.set({ focusBlockerCustomSites: updated }, () => {
             setCustomSites(updated);
         });
     };
 
     const handleToggle = () => {
-        chrome.storage.sync.set({ focusBlockerActive: !active }, () => {
+        chrome.storage.local.set({ focusBlockerActive: !active }, () => {
             setActive(!active);
         });
     };

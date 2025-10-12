@@ -26,7 +26,7 @@ export default function WordCounter(): JSX.Element {
   // Load saved goal
   useEffect(() => {
     if (chrome?.storage?.sync) {
-      chrome.storage.sync.get("wordGoal", (data: { wordGoal?: number }) => {
+      chrome.storage.local.get("wordGoal", (data: { wordGoal?: number }) => {
         if (data.wordGoal) setGoal(data.wordGoal);
       });
     }
@@ -35,13 +35,13 @@ export default function WordCounter(): JSX.Element {
   // Save goal when updated
   useEffect(() => {
     if (chrome?.storage?.sync) {
-      chrome.storage.sync.set({ wordGoal: goal });
+      chrome.storage.local.set({ wordGoal: goal });
     }
   }, [goal]);
 
   useEffect(() => {
     if (chrome?.storage?.sync) {
-      chrome.storage.sync.get("journal", (data: { journal?: JournalEntry[] }) => {
+      chrome.storage.local.get("journal", (data: { journal?: JournalEntry[] }) => {
         setJournal(data.journal || []);
       });
     }
@@ -54,12 +54,17 @@ export default function WordCounter(): JSX.Element {
     };
 
     if (chrome?.storage?.sync) {
-      chrome.storage.sync.get("journal", (data: { journal?: JournalEntry[] }) => {
+      chrome.storage.local.get("journal", (data: { journal?: JournalEntry[] }) => {
         const journal: JournalEntry[] = data.journal || [];
         journal.push(entry);
-        chrome.storage.sync.set({ journal }, () => {
-          setJournal([...journal]); // Update state so UI refreshes
+        chrome.storage.local.set({ journal }, () => {
+          setJournal([...journal]);
           alert("Saved to Journal!");
+          
+          chrome.runtime.sendMessage({
+            type: "UPDATE_STUDY_STATS",
+            wordsWritten: text.trim().split(/\s+/).length
+          });
         });
       });
     }
@@ -74,7 +79,7 @@ export default function WordCounter(): JSX.Element {
     const updated = [...journal];
     updated[idx] = { ...updated[idx], text: editText };
     if (chrome?.storage?.sync) {
-      chrome.storage.sync.set({ journal: updated }, () => {
+      chrome.storage.local.set({ journal: updated }, () => {
         setJournal(updated);
         setEditingIdx(null);
         setEditText("");
@@ -86,7 +91,7 @@ export default function WordCounter(): JSX.Element {
     if (!window.confirm("Delete this journal entry?")) return;
     const updated = journal.filter((_, i) => i !== idx);
     if (chrome?.storage?.sync) {
-      chrome.storage.sync.set({ journal: updated }, () => {
+      chrome.storage.local.set({ journal: updated }, () => {
         setJournal(updated);
       });
     }

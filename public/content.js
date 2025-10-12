@@ -97,7 +97,7 @@ function computeStats(text) {
   let readingTimer = null;
 
   function saveReadingSession() {
-    chrome.storage.sync.get("readingSessions", (data) => {
+    chrome.storage.local.get("readingSessions", (data) => {
       const url = window.location.href;
       const session = {
         url,
@@ -111,7 +111,7 @@ function computeStats(text) {
       } else {
         sessions.push(session);
       }
-      chrome.storage.sync.set({ readingSessions: sessions });
+      chrome.storage.local.set({ readingSessions: sessions });
     });
   }
 
@@ -160,7 +160,7 @@ function computeStats(text) {
   });
 //Focus Blocker
 function getBlockedSites(callback) {
-  chrome.storage.sync.get(["focusBlockerCustomSites"], (data) => {
+  chrome.storage.local.get(["focusBlockerCustomSites"], (data) => {
     const customSites = data.focusBlockerCustomSites || [];
     const BLOCKED_SITES = [
       "facebook.com",
@@ -178,7 +178,7 @@ function getBlockedSites(callback) {
   });
 }
 
-chrome.storage.sync.get("focusBlockerActive", (data) => {
+chrome.storage.local.get("focusBlockerActive", (data) => {
   if (data.focusBlockerActive) {
     getBlockedSites((BLOCKED_SITES) => {
       if (BLOCKED_SITES.some(site => window.location.hostname.includes(site))) {

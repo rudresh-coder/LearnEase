@@ -10,7 +10,7 @@ export default function ReadingTimer() {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             const tab = tabs[0];
             if (tab && tab.url) {
-                chrome.storage.sync.get("readingSessions", (data: { readingSessions?: { url: string; timeSpent: number; lastAccessed: string; }[] }) => {
+                chrome.storage.local.get("readingSessions", (data: { readingSessions?: { url: string; timeSpent: number; lastAccessed: string; }[] }) => {
                     const session = (data.readingSessions || []).find((s: { url: string; timeSpent: number; lastAccessed: string }) => s.url === tab.url);
                     if (session && session.timeSpent > 0) {
                         setActive(true);
@@ -32,7 +32,7 @@ export default function ReadingTimer() {
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 const tab = tabs[0];
                 if (tab && tab.url) {
-                    chrome.storage.sync.get("readingSessions", (data: { readingSessions?: { url: string; timeSpent: number; lastAccessed: string; }[] }) => {
+                    chrome.storage.local.get("readingSessions", (data: { readingSessions?: { url: string; timeSpent: number; lastAccessed: string; }[] }) => {
                         const session = (data.readingSessions || []).find((s: { url: string; timeSpent: number; lastAccessed: string }) => s.url === tab.url);
                         setReadingTime(session ? session.timeSpent : 0);
                     });
