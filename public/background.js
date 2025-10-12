@@ -142,7 +142,16 @@ function updateBadges(stats, streak) {
       badges.push("🌟 Studied Every Day This Week");
     }
 
-    chrome.storage.local.set({ studyBadges: badges });
+    chrome.storage.local.set({ studyBadges: badges }, () => {
+      if (chrome.runtime.lastError && chrome.runtime.lastError.message?.includes("quota")) {
+        chrome.notifications.create({
+          type: "basic",
+          iconUrl: "icons/LearnEaseicon48.png",
+          title: "Storage Full",
+          message: "Your extension storage is full. Please delete old journal entries or stats."
+        });
+      }
+    });
   });
 }
 

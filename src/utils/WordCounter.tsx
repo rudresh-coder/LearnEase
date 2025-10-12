@@ -7,6 +7,9 @@ interface JournalEntry {
   date: string;
 }
 
+const MAX_BYTES = 5 * 1024 * 1024; // 5MB quota for chrome.storage.local
+const WARNING_THRESHOLD = 0.9; // Warning at 90% usage
+
 export default function WordCounter(): JSX.Element {
   const [text, setText] = useState<string>("");
   const [goal, setGoal] = useState<number>(500);
@@ -53,21 +56,28 @@ export default function WordCounter(): JSX.Element {
       date: new Date().toLocaleDateString(),
     };
 
-    if (chrome?.storage?.sync) {
+    chrome.storage.local.getBytesInUse(null, (bytesInUse) => {
+      if (bytesInUse > MAX_BYTES * WARNING_THRESHOLD) {
+        alert("Warning: Your storage is almost full! Please delete some journal entries soon.");
+      }
+      // Proceed to save as before
       chrome.storage.local.get("journal", (data: { journal?: JournalEntry[] }) => {
         const journal: JournalEntry[] = data.journal || [];
         journal.push(entry);
         chrome.storage.local.set({ journal }, () => {
-          setJournal([...journal]);
-          alert("Saved to Journal!");
-          
-          chrome.runtime.sendMessage({
-            type: "UPDATE_STUDY_STATS",
-            wordsWritten: text.trim().split(/\s+/).length
-          });
+          if (chrome.runtime.lastError && chrome.runtime.lastError.message?.includes("quota")) {
+            alert("Storage is full! Please delete some journal entries to save new ones.");
+          } else {
+            setJournal([...journal]);
+            alert("Saved to Journal!");
+            chrome.runtime.sendMessage({
+              type: "UPDATE_STUDY_STATS",
+              wordsWritten: text.trim().split(/\s+/).length
+            });
+          }
         });
       });
-    }
+    });
   };
 
   const handleEdit = (idx: number) => {
@@ -80,9 +90,13 @@ export default function WordCounter(): JSX.Element {
     updated[idx] = { ...updated[idx], text: editText };
     if (chrome?.storage?.sync) {
       chrome.storage.local.set({ journal: updated }, () => {
-        setJournal(updated);
-        setEditingIdx(null);
-        setEditText("");
+        if (chrome.runtime.lastError && chrome.runtime.lastError.message?.includes("quota")) {
+          alert("Storage is full! Please delete some journal entries.");
+        } else {
+          setJournal(updated);
+          setEditingIdx(null);
+          setEditText("");
+        }
       });
     }
   };
