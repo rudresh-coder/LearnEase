@@ -1,73 +1,54 @@
-# React + TypeScript + Vite
+# LearnEase Chrome Extension
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**LearnEase** is a smart student toolkit for productivity and focus, built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Word Counter & Daily Journal**
+  - Count words, characters, sentences, paragraphs, and reading time.
+  - Save journal entries locally (not synced across devices).
+  - Set writing goals and track progress.
+  - Storage quota warnings and management.
 
-## React Compiler
+- **Reading Timer**
+  - Track time spent reading on any webpage.
+  - Pause, resume, and stop reading sessions.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Website Blocker**
+  - Block distracting sites during study sessions.
+  - Add/remove custom sites to block.
 
-## Expanding the ESLint configuration
+- **Pomodoro Timer**
+  - Customizable work, break, and long break durations.
+  - Cycle management and auto-start.
+  - Notifications for session transitions.
+  - Visual progress bar and session guidelines.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Study Stats**
+  - Weekly summary chart (hours studied, words written per day).
+  - Study streak tracker (e.g., 🔥 5-Day Study Streak).
+  - Achievements & badges for milestones.
+  - Compare to last week and smart insights.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Data & Storage
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **All data is stored locally using `chrome.storage.local`.**
+- **Your journal, stats, and settings are private and only available on your current device and browser profile.**
+- **If storage is nearly full, you will receive a warning and may need to delete old journal entries or stats.**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Usage
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. **Install the extension in Chrome (load as unpacked extension in developer mode).**
+2. **Open the popup from the extension icon.**
+3. **Select a tool from the main menu:**
+   - Word Counter
+   - Reading Timer
+   - Website Blocker
+   - Pomodoro Timer
+   - Study Stats
+4. **Follow on-screen instructions and guidelines for each tool.**
+5. **For journal and stats, manage your entries to avoid hitting the storage quota.**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## License
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This project is licensed under the MIT License.
