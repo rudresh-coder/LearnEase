@@ -66,30 +66,37 @@ export default function StudyStats() {
       {/* Weekly Summary Chart */}
       <div style={{ marginBottom: 18 }}>
         <div style={{ fontWeight: 600, marginBottom: 8 }}>Weekly Summary</div>
-        <svg width={320} height={110}>
-          {/* Hours studied bars */}
+        <svg width={320} height={140}>
+          {/* Crown icon above best day */}
+          <text
+            x={29 + bestDayIdx * 40}
+            y={28}
+            fontSize={22}
+            textAnchor="middle"
+          >👑</text>
+          {/* Hours studied bars (Blue) */}
           {weeklyStats.map((s, i) => (
             <rect
               key={s.day}
               x={20 + i * 40}
-              y={60 - (s.hours / maxHours) * 50}
+              y={60 - (s.hours / maxHours) * 50 + 40}
               width={18}
               height={(s.hours / maxHours) * 50}
-              fill={i === bestDayIdx ? "#f59e42" : "#2563eb"}
+              fill="#2563eb"
               rx={4}
             />
           ))}
-          {/* Words written bars */}
+          {/* Words written bars (Green), offset right and slightly lower */}
           {weeklyStats.map((s, i) => (
             <rect
               key={s.day + "-words"}
               x={20 + i * 40 + 20}
-              y={60 - (s.words / maxWords) * 50}
+              y={60 - (s.words / maxWords) * 50 + 40}
               width={18}
               height={(s.words / maxWords) * 50}
               fill="#10b981"
               rx={4}
-              opacity={0.7}
+              opacity={0.85}
             />
           ))}
           {/* Day labels */}
@@ -97,7 +104,7 @@ export default function StudyStats() {
             <text
               key={s.day + "-label"}
               x={29 + i * 40}
-              y={80}
+              y={120}
               fontSize={13}
               textAnchor="middle"
               fill="#444"
@@ -105,16 +112,9 @@ export default function StudyStats() {
               {s.day}
             </text>
           ))}
-          {/* Crown icon for best day */}
-          <text
-            x={29 + bestDayIdx * 40}
-            y={40}
-            fontSize={22}
-            textAnchor="middle"
-          >👑</text>
         </svg>
         <div style={{ fontSize: "0.95em", color: "#2563eb", marginTop: 6 }}>
-          <span style={{ fontWeight: 600 }}>Blue:</span> Hours studied &nbsp;
+          <span style={{ fontWeight: 600, color: "#2563eb" }}>Blue:</span> Hours studied &nbsp;
           <span style={{ color: "#10b981", fontWeight: 600 }}>Green:</span> Words written
         </div>
       </div>
