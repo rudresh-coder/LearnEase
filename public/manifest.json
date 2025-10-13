@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "LearnEase",
-    "description": "Smart Student Toolkit: Word Counter, Timers, Focus Blocker, Journal & more.",
+    "description": "Smart Student Toolkit: Word Counter, Reading Timer, Study Timer, Website Blocker, Journal & more.",
     "version": "1.0.0",
     "action": {
       "default_popup": "index.html",
