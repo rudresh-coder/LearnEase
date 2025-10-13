@@ -3,8 +3,12 @@
     min-height: 480px;
     padding: 18px;
     font-family: sans-serif;
-    background-color: #fff;
-}
+    background: #fff; 
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(16,185,129,0.09);
+    position: relative;
+    z-index: 1;
+  }
 
 .app-menu-title {
     margin-bottom: 18px;
@@ -82,4 +86,67 @@
     height: 55px;
     padding: 0.5em 2.7em;
     width: 235px;
+}
+
+.app-animated-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(120deg, rgba(16,185,129,0.12) 0%, rgba(37,99,235,0.10) 100%);
+    background-size: 200% 200%;
+    animation: gradientMove 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+.app-ripple-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ripple {
+  fill: none;
+  stroke: rgba(37,99,235,0.45);
+  stroke-width: 2.5;
+  opacity: 0.95;
+  animation: rippleAnim 4s linear infinite;
+}
+
+.ripple-1 { animation-delay: 0s; }
+.ripple-2 { animation-delay: 1s; }
+.ripple-3 { animation-delay: 2s; }
+.ripple-4 { animation-delay: 2.5s; }
+.ripple-5 { animation-delay: 3s; }
+.ripple-0 { animation-delay: 1.5s; }
+.ripple-6 { animation-delay: 3.5s; }
+.ripple-7 { animation-delay: 4s; }
+.ripple-8 { animation-delay: 4.5s; }
+.ripple-9 { animation-delay: 5s; }
+.ripple-10 { animation-delay: 5.5s; }
+.ripple-11 { animation-delay: 6s; }
+
+@keyframes rippleAnim {
+  0% {
+    r: 0;
+    opacity: 0.7;
+  }
+  70% {
+    opacity: 0.25;
+  }
+  100% {
+    r: 80;
+    opacity: 0;
+  }
 }
