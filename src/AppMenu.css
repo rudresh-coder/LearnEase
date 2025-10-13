@@ -250,3 +250,69 @@
 .app-sidebar-btn:hover {
   background: rgba(37,99,235,0.08);
 }
+
+.info-card {
+  width: 340px;
+  margin: 0 auto;
+  padding: 24px 18px 18px 18px;
+  background: linear-gradient(120deg, rgba(16,185,129,0.12) 0%, rgba(37,99,235,0.10) 100%);
+  border-radius: 16px;
+  font-family: sans-serif;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(24px) scale(0.98);
+  animation: fadeInCard 0.7s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+
+@keyframes fadeInCard {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.info-card h2 {
+  margin-bottom: 18px;
+  font-size: 2em;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, #10b981 40%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: floatBook 2.5s ease-in-out infinite;
+}
+
+.info-card p, .info-card ul {
+  font-size: 1.08em;
+  color: #222;
+  text-align: left;
+  margin: 0 auto 12px auto;
+  max-width: 95%;
+  line-height: 1.7;
+  transition: color 0.2s;
+}
+
+.info-card .highlight {
+  color: #10b981;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.info-card .section-title {
+  color: #2563eb;
+  font-weight: 700;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-size: 1.08em;
+  letter-spacing: 0.5px;
+}
+
+.info-card .contact-link {
+  color: #2563eb;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+.info-card .contact-link:hover {
+  color: #10b981;
+}
