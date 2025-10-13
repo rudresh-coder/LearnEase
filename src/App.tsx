@@ -4,6 +4,9 @@ import ReadingTimer from "./utils/ReadingTimer";
 import FocusBlocker from "./utils/FocusBlocker";
 import StudyTimer from "./utils/StudyTimer";
 import StudyStats from "./utils/StudyStats";
+import About from "./utils/About";
+import PrivacyPolicy from "./utils/PrivacyPolicy";
+import Contact from "./utils/Contact";
 import "./AppMenu.css";
 
 const FEATURES = [
@@ -14,13 +17,65 @@ const FEATURES = [
   { key: "stats", label: "Study Stats" },
 ];
 
+const SIDEBAR = [
+  { key: "about", label: "About" },
+  { key: "privacy", label: "Privacy" },
+  { key: "contact", label: "Contact" },
+];
+
 export default function App() {
   const [page, setPage] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="app-menu-container" style={{ position: "relative", zIndex: 1 }}>
       <div className="app-animated-bg"></div>
       
+      <button
+        className="sidebar-toggle-btn"
+        onClick={() => setSidebarOpen(o => !o)}
+        aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+      >
+        {sidebarOpen ? (
+          <span style={{ fontSize: "1.5em", color: "#10b981" }}>✖</span>
+        ) : (
+          <span style={{ fontSize: "1.5em", color: "#10b981" }}>☰</span>
+        )}
+      </button>
+
+      <div
+        className={`app-sidebar${sidebarOpen ? " open" : ""}`}
+        style={{
+          left: sidebarOpen ? 0 : '-100%'
+        }}
+      >
+        {/* Ripple effect for sidebar */}
+        <div className="app-ripple-bg" style={{ borderRadius: 18, overflow: "hidden", width: "100%", height: "100%", position: "absolute", left: 0, top: 0, zIndex: 0 }}>
+          <svg width="110" height="100vh" viewBox="0 0 110 400" style={{ position: "absolute", top: 0, left: 0 }}>
+            {[...Array(6)].map((_, i) => (
+              <circle
+                key={i}
+                cx={Math.random() * 110}
+                cy={Math.random() * 400}
+                r="0"
+                className={`ripple ripple-${i}`}
+              />
+            ))}
+          </svg>
+        </div>
+        <div style={{ position: "relative", zIndex: 1, width: "100%" }}>
+          {SIDEBAR.map(item => (
+            <button
+              key={item.key}
+              className="app-sidebar-btn"
+              onClick={() => { setPage(item.key); setSidebarOpen(false); }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {!page && (
         <>
           <div className="app-ripple-bg">
@@ -59,15 +114,21 @@ export default function App() {
             >
               <span role="img" aria-label="book">📚</span> LearnEase
             </span>
-            <span style={{
-              color: "#444",
-              fontSize: "1.08em",
-              fontWeight: 500,
-              letterSpacing: "0.5px",
-              textAlign: "center",
-              marginTop: 2
-            }}>
-              Your smart student toolkit for productivity & focus
+            <span
+              style={{
+                fontSize: "1.18em",
+                fontWeight: 400,
+                letterSpacing: "0.7px",
+                textAlign: "center",
+                marginTop: 6,
+                padding: "6px 18px",
+                borderRadius: "12px",
+                color: "#2563eb",
+                opacity: 0,
+                animation: "fadeInSubtitle 1.2s ease-in-out forwards"
+              }}
+            >
+              Your smart student toolkit for <span style={{ color: "#10b981", fontWeight: 500 }}>productivity</span> & <span style={{ color: "#2563eb", fontWeight: 500 }}>focus</span>
             </span>
           </div>
           <div className="app-menu-grid">
@@ -90,6 +151,9 @@ export default function App() {
       {page === "focus" && <FocusBlocker />}
       {page === "pomodoro" && <StudyTimer />}
       {page === "stats" && <StudyStats />}
+      {page === "about" && <About />}
+      {page === "privacy" && <PrivacyPolicy />}
+      {page === "contact" && <Contact />}
       {page && (
         <button className="app-menu-btn app-menu-back" onClick={() => setPage(null)}>
           <span className="gradient"></span>

@@ -18,6 +18,16 @@
     letter-spacing: 0.5px;
 }
 
+.app-title-book {
+    display: inline-block;
+    animation: floatBook 2.5s ease-in-out infinite;
+  }
+  
+.app-title-letter {
+    display: inline-block;
+    animation: floatLetter 2.2s ease-in-out infinite;
+}
+
 .app-menu-grid {
     display: grid;
     justify-items: center;
@@ -99,12 +109,6 @@
     animation: gradientMove 8s ease-in-out infinite;
     pointer-events: none;
   }
-  
-  @keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
 
 .app-ripple-bg {
   position: fixed;
@@ -149,4 +153,100 @@
     r: 80;
     opacity: 0;
   }
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeInSubtitle {
+    from { opacity: 0; transform: translateY(12px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+
+@keyframes floatBook {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-18px) scale(1.08); }
+}
+
+@keyframes floatLetter {
+  0%, 100% { transform: translateY(0); }
+  20% { transform: translateY(-4px); }
+  40% { transform: translateY(0); }
+  60% { transform: translateY(4px); }
+  80% { transform: translateY(0); }
+}
+
+.app-sidebar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 160px;
+  border-top-left-radius: 18px;
+  border-bottom-left-radius: 18px;
+  box-shadow: 2px 0 8px rgba(16,185,129,0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:flex-start;
+  padding-top: 70px;
+  z-index: 2;
+  transition: left 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.app-sidebar.open {
+  left: 0 !important;
+}
+
+.sidebar-toggle-btn {
+  position: absolute;
+  left: 12px;
+  top: 18px;
+  z-index: 10;
+  background: #e0f7fa;
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: box-shadow 0.2s, background 0.2s;
+}
+.sidebar-toggle-btn:hover {
+  background: #b3e6f6;
+  box-shadow: 0 4px 16px rgba(16,185,129,0.15);
+}
+
+.sidebar-toggle-btn:focus,
+.sidebar-toggle-btn:active {
+  outline: none;
+  box-shadow: 0 4px 16px rgba(16,185,129,0.15); 
+  border: none;
+}
+
+.app-sidebar-btn {
+  width: 80%;
+  min-width: 120px;
+  max-width: 170px;
+  margin-bottom: 18px;
+  font-size: 1em;
+  background: rgba(255,255,255,0.05);
+  color: #10b981;
+  border: 2px solid #10b981;
+  border-radius: 0.6em;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: none;
+  transition: background 0.2s, border-color 0.2s;
+  display: block;
+  text-align: center;
+}
+
+.app-sidebar-btn:hover {
+  background: rgba(37,99,235,0.08);
 }
