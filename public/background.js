@@ -40,6 +40,10 @@ let pomodoro = {
 };
 
 function savePomodoroState() {
+  if (!chrome.storage || !chrome.storage.local) {
+    console.error("chrome.storage.local is not available");
+    return;
+  }
   chrome.storage.local.set({
     pomodoroMode: pomodoro.mode,
     pomodoroSecondsLeft: pomodoro.secondsLeft,

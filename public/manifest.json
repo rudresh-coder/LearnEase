@@ -22,7 +22,7 @@
       "128": "icons/LearnEaseLogo128.png",
       "256": "icons/LearnEaseLogo256.png"
     },
-    "permissions": ["storage", "activeTab", "scripting", "alarms", "declarativeNetRequest", "notifications"],
+    "permissions": ["storage", "activeTab", "scripting", "notifications"],
     "background": {
       "service_worker": "background.js"
     },
