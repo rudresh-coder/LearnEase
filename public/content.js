@@ -194,7 +194,7 @@ chrome.storage.local.get("focusBlockerActive", (data) => {
 });
 
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "sync" && changes.focusBlockerActive) {
+  if (area === "local" && changes.focusBlockerActive) {
     const isActive = changes.focusBlockerActive.newValue;
     getBlockedSites((BLOCKED_SITES) => {
       if (isActive && BLOCKED_SITES.some(site => window.location.hostname.includes(site))) {
