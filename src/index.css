@@ -61,6 +61,16 @@ button:focus-visible {
   font-size: 1.1em;
 }
 
+.learnease-sticky-note-minimized {
+  box-shadow: 0 2px 8px rgba(245,158,66,0.18);
+  border: 1.5px solid #f59e42;
+  transition: box-shadow 0.2s;
+}
+.learnease-sticky-note-minimized:hover {
+  box-shadow: 0 4px 16px rgba(245,158,66,0.28);
+  background: #ffdca8;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
