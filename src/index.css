@@ -54,6 +54,13 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.learnease-sticky-note textarea:focus {
+  outline: 2px solid #f59e42;
+}
+.learnease-sticky-note button {
+  font-size: 1.1em;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

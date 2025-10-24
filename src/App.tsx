@@ -131,6 +131,39 @@ export default function App() {
               Your smart student toolkit for <span style={{ color: "#10b981", fontWeight: 500 }}>productivity</span> & <span style={{ color: "#2563eb", fontWeight: 500 }}>focus</span>
             </span>
           </div>
+          <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
+            <button
+              className="app-menu-btn"
+              onClick={() => {
+                chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                  if (tabs[0]?.id) {
+                    chrome.tabs.sendMessage(tabs[0].id, { type: "TOGGLE_STICKY_NOTES" }, () => {
+                      if (chrome.runtime.lastError) {
+                        alert("Sticky Notes are only available on regular web pages.");
+                      }
+                    });
+                  }
+                });
+              }}
+            >
+              🗒️ Show Sticky Notes
+            </button>
+            <button
+              className="app-menu-btn"
+              onClick={() => {
+                chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                  if (tabs[0]?.id) {
+                    chrome.tabs.sendMessage(tabs[0].id, { type: "TOGGLE_STICKY_NOTES" }, () => {
+                      if (chrome.runtime.lastError) {
+                        alert("Sticky Notes are only available on regular web pages.");
+                      }
+                    });                  }
+                });
+              }}
+            >
+              ➕ New Sticky Note
+            </button>
+          </div>
           <div className="app-menu-grid">
             {FEATURES.map(f => (
               <button
