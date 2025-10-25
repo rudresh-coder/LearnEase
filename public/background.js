@@ -1,16 +1,6 @@
 // public/background.js
 chrome.runtime.onInstalled.addListener(() => {
   console.log("LearnEase background installed");
-  chrome.tabs.query({}, (tabs) => {
-    for (const tab of tabs) {
-      if (tab.id && tab.url && /^https?:/.test(tab.url)) {
-        chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          files: ["content.js"]
-        });
-      }
-    }
-  });
 });
 
 // Listen for window focus changes
